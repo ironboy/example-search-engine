@@ -6,6 +6,7 @@ import dbCredentials from './db-credentials.js';
 // connect to db
 const db = await mysql.createConnection(dbCredentials);
 
+// read all files
 const files = fs.readdirSync('./frontend/music');
 
 // remove all posts from the musicMeta
