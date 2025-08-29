@@ -10,5 +10,4 @@
 * Search all file types
 * Filter or check boxes for which filetypes?
 * Hur ska man jämställa olika fältnamn/betydelser mellan olika filtyper? (T.ex. artist/author etc. etc?)
-
-
+* Sök flera fält med inviduella värden

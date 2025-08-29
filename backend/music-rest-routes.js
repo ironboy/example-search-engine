@@ -1,13 +1,26 @@
 export default function setupMusicRestRoutes(app, db) {
 
-  app.get('/api/music-search/:field/:searchValue', async (req, res) => {
+  app.get('/api/music-search/:fields/:searchValue', async (req, res) => {
     // get field and searhValue from the request parameters
-    const { field, searchValue } = req.params;
-    // check that field is a valid field, if not do nothing
-    if (!['title', 'album', 'artist', 'genre'].includes(field)) {
+    let { fields, searchValue } = req.params;
+    // convert fields from a string with comma separated values to an array
+    fields = fields.split(',');
+
+    // check that every field is a valid field, if not do nothing
+    if (!fields.every(field =>
+      ['title', 'album', 'artist', 'genre'].includes(field))
+    ) {
       res.json({ error: 'Invalid field name!' });
       return;
     }
+    // create the where condition for our sql query
+    // from the fields chosen
+    let where = [];
+    for (let field of fields) {
+      where.push(`LOWER(meta ->> '$.common.${field}') LIKE LOWER(?)`);
+    }
+    where = where.join(' OR ');
+
     // run the db query as a prepared statement
     const [result] = await db.execute(`
     SELECT id,meta->>'$.file' AS fileName,
@@ -16,9 +29,9 @@ export default function setupMusicRestRoutes(app, db) {
       meta->>'$.common.album' AS album,
       meta->>'$.common.genre' AS genre
     FROM musicMeta
-    WHERE LOWER(meta->>'$.common.${field}') LIKE LOWER(?)
-    ORDER BY ${field}
-  `, ['%' + searchValue + '%']
+    WHERE ${where}
+    ORDER BY ${fields[0]}
+  `, new Array(fields.length).fill('%' + searchValue + '%')
     );
     // return the result as json
     res.json(result);
