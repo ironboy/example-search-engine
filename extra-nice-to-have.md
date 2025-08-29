@@ -1,4 +1,5 @@
-* Hide all metadata again.
+* Hide all metadata again. DONE!
+
 * Check boxes for which metadata.
 * Order by (alfabetisk ordning beroende på valt sökfält).
 * Spara tidigare sökningar.

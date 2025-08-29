@@ -37,6 +37,13 @@ document.body.addEventListener('change', event => {
 document.body.addEventListener('click', async event => {
   let button = event.target.closest('.btn-show-all-music-metadata');
   if (!button) { return; }
+  // if the metadata is already shown
+  if (button.classList.contains('already-shown')) {
+    button.classList.remove('already-shown');
+    let pre = button.nextElementSibling;
+    pre.remove();
+    return;
+  }
   // if we have clicked a  btn-show-all-music-metadata
   let id = button.getAttribute('data-id');
   // fetch detailed metadata
@@ -47,6 +54,8 @@ document.body.addEventListener('click', async event => {
   pre.innerHTML = JSON.stringify(result, null, '  ');
   // add the newly created pre element after the button
   button.after(pre);
+  // add a class signaling that the metadata is shown
+  button.classList.add('already-shown');
 });
 
 
@@ -79,7 +88,10 @@ async function musicSearch() {
         <p><b>Genre:</b> ${genre || 'Okänd genre'}</p>
         <audio controls src="/music/${fileName}"></audio>
         <p><a href="/music/${fileName}" download>Ladda ned filen</a></p>
-        <p><button class="btn-show-all-music-metadata" data-id="${id}">Visa all metadata</button></p>
+        <p><button class="btn-show-all-music-metadata" data-id="${id}">
+          <span class="show">Visa all metadata</span>
+          <span class="hide">Dölj extra metadata</span>
+        </button></p>
       </article>
     `;
   }
