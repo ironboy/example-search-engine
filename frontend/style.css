@@ -119,7 +119,7 @@ label {
 
 .btn-show-all-music-metadata.already-shown {
   .show {
-    display: none
+    display: none;
   }
 }
 
