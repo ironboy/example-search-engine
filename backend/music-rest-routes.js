@@ -17,6 +17,7 @@ export default function setupMusicRestRoutes(app, db) {
       meta->>'$.common.genre' AS genre
     FROM musicMeta
     WHERE LOWER(meta->>'$.common.${field}') LIKE LOWER(?)
+    ORDER BY ${field}
   `, ['%' + searchValue + '%']
     );
     // return the result as json
