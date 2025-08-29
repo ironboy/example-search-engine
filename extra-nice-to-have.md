@@ -1,7 +1,8 @@
 * Hide all metadata again. DONE!
 * Order by (alfabetisk ordning beroende på valt sökfält). DONE!
+* Check boxes for which metadata. DONE!
+* Show number of search results. DONE!
 
-* Check boxes for which metadata.
 * Spara tidigare sökningar.
 * Back/forward.
 

@@ -112,7 +112,7 @@ pre {
   font-size: 14px;
 }
 
-label {
+label:not(.checkbox-label) {
   display: block;
   margin: 20px 0;
 }

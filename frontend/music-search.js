@@ -1,14 +1,27 @@
+// Field to Swedish dictionary
+let fieldsToSwedish = {
+  title: 'Titel',
+  album: 'Album',
+  artist: 'Artist',
+  genre: 'Genre'
+};
+
 // A function to create the music search page content
 export function musicSearchPageContent() {
   return `
       <h1>Sök musik</h1>
       <label>
-        Sök på: <select name="music-meta-field">
-          <option value="artist">Artist</option>
-          <option value="title">Låttitel</option>
-          <option value="album">Album</option>
-          <option value="genre">Genre</option>
-        </select>
+        ${['title', 'artist', 'album', 'genre'].map(field => /*html*/`
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              checked
+              name="music-field-${field}"
+              value="${field}"
+            >
+            ${fieldsToSwedish[field]}
+          </label>
+        `).join('')}
       </label>
       <label>
         <input name="music-search" type="text" placeholder="Sök bland musikfiler">
@@ -27,8 +40,8 @@ document.body.addEventListener('keyup', event => {
 
 // Listen to changes to the select/dropdown music meta field
 document.body.addEventListener('change', event => {
-  let select = event.target.closest('select[name="music-meta-field"]');
-  if (!select) { return; }
+  let checkbox = event.target.closest('input[name^="music-field"]');
+  if (!checkbox) { return; }
   musicSearch();
 });
 
@@ -62,23 +75,25 @@ document.body.addEventListener('click', async event => {
 // music search (called on key up in search field and on changes to the select/dropdown)
 async function musicSearch() {
   let inputField = document.querySelector('input[name="music-search"]');
+  // get the chosen field to search for in the meta data
+  // convert a node list of our checkboxes to a real array
+  // only keep the checked checkboxes and then read their values
+  let fields = [...document.querySelectorAll('input[name^="music-field"]')]
+    .filter(x => x.checked)
+    .map(x => x.value);
   // if empty input field do not search just empty search results
-  // if(!inputField.value){
-  if (inputField.value === '') {
+  // or no field checkboes selected
+  if (inputField.value === '' || fields.length === 0) {
     document.querySelector('.music-search-result').innerHTML = '';
     return;
   }
-  // get the chosen field to search for in the meta data
-  let field = document.querySelector(
-    'select[name="music-meta-field"]'
-  ).value;
   // ask the rest-api (correct rest route) for search results
   let rawResponse = await fetch(
-    `/api/music-search/${field}/${inputField.value}`
+    `/api/music-search/${fields}/${inputField.value}`
   );
   // unpack search results from json
   let result = await rawResponse.json();
-  let resultAsHtml = '';
+  let resultAsHtml = `<p>${result.length} sökresultat</p>`;
   for (let { id, fileName, title, artist, album, genre } of result) {
     resultAsHtml += `
       <article>
