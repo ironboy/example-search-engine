@@ -1,3 +1,13 @@
+* Hide all metadata again.
+* Check boxes for which metadata.
+* Order by (alfabetisk ordning beroende på valt sökfält).
 * Spara tidigare sökningar.
 * Back/forward.
-* Check boxes for which metadata
+
+---
+# The mega search page
+* Search all file types
+* Filter or check boxes for which filetypes?
+* Hur ska man jämställa olika fältnamn/betydelser mellan olika filtyper? (T.ex. artist/author etc. etc?)
+
+
